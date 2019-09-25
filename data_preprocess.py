@@ -4,10 +4,10 @@ import librosa
 import numpy as np
 from tqdm import tqdm
 
-clean_train_folder = 'data/clean_trainset_56spk_wav'
-noisy_train_folder = 'data/noisy_trainset_56spk_wav'
-clean_test_folder = 'data/clean_testset_wav'
-noisy_test_folder = 'data/noisy_testset_wav'
+clean_train_folder = 'data/clean_train'
+noisy_train_folder = 'data/noisy_train'
+clean_test_folder = 'data/clean_test'
+noisy_test_folder = 'data/noisy_test'
 serialized_train_folder = 'data/serialized_train_data'
 serialized_test_folder = 'data/serialized_test_data'
 window_size = 2 ** 14  # about 1 second of samples
