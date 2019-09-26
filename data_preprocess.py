@@ -5,6 +5,7 @@ import numpy as np
 from tqdm import tqdm
 import sys
 
+print(sys.argv)
 clean_train_folder = 'data/clean_train'
 noisy_train_folder = f'data/{sys.argv[1]}_train'
 clean_test_folder = 'data/clean_test'
