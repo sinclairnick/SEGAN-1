@@ -88,7 +88,10 @@ if __name__ == '__main__':
             # backprop + optimize
             g_loss.backward()
             g_optimizer.step()
-
+            print(clean_loss.data)
+            print(noisy_loss.data)
+            print(g_loss.data)
+            print(g_cond_loss.data)
             train_bar.set_description(
                 'Epoch {}: d_clean_loss {:.4f}, d_noisy_loss {:.4f}, g_loss {:.4f}, g_conditional_loss {:.4f}'
                     .format(epoch + 1, clean_loss.data[0], noisy_loss.data[0], g_loss.data[0], g_cond_loss.data[0]))
