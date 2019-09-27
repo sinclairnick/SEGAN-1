@@ -17,6 +17,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train Audio Enhancement')
     parser.add_argument('--batch_size', default=50, type=int, help='train batch size')
     parser.add_argument('--num_epochs', default=86, type=int, help='train epochs number')
+    parser.add_argument('--loss_path', default='../loss.csv', help='save path for loss info file (csv)')
 
     opt = parser.parse_args()
     BATCH_SIZE = opt.batch_size
@@ -70,7 +71,7 @@ if __name__ == '__main__':
             noisy_loss = torch.mean(outputs ** 2)  # L2 loss - we want them all to be 0
             noisy_loss.backward()
 
-            # d_loss = clean_loss + noisy_loss
+            d_loss = clean_loss + noisy_loss
             d_optimizer.step()  # update parameters
 
             # TRAIN G so that D recognizes G(z) as real
@@ -91,6 +92,11 @@ if __name__ == '__main__':
             train_bar.set_description(
                 'Epoch {}: d_clean_loss {:.4f}, d_noisy_loss {:.4f}, g_loss {:.4f}, g_conditional_loss {:.4f}'
                     .format(epoch + 1, clean_loss.item(), noisy_loss.item(), g_loss.item(), g_cond_loss.item()))
+        if not os.path.exists(opt.loss_path):
+            with open(opt.loss_path, 'w') as f:
+                f.write('epoch,g_loss,d_loss\n')
+        with open(opt.loss_path, 'a') as file:
+            file.write(f'{epoch+1},{g_loss},{d_loss}\n')
 
         # TEST model
         test_bar = tqdm(test_data_loader, desc='Test model and save generated audios')
