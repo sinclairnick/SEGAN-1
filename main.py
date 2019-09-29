@@ -96,7 +96,7 @@ if __name__ == '__main__':
             with open(opt.loss_path, 'w') as f:
                 f.write('epoch,g_loss,d_loss\n')
         with open(opt.loss_path, 'a') as file:
-            file.write(f'{epoch+1},{g_loss},{d_loss}\n')
+            file.write('{},{},{}\n'.format(epoch+1, g_loss, d_loss))
 
         # TEST model
         test_bar = tqdm(test_data_loader, desc='Test model and save generated audios')
