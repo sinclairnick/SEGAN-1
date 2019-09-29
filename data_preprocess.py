@@ -6,9 +6,9 @@ from tqdm import tqdm
 import sys
 
 clean_train_folder = '../data/clean_train'
-noisy_train_folder = f'../data/{sys.argv[1]}_train'
+noisy_train_folder = '../data/{}_train'.format(sys.argv[1])
 clean_test_folder = '../data/clean_test'
-noisy_test_folder = f'../data/{sys.argv[1]}_test'
+noisy_test_folder = '../data/{}_test'.format(sys.argv[1])
 serialized_train_folder = '../data/serialized_train_data'
 serialized_test_folder = '../data/serialized_test_data'
 window_size = 2 ** 14  # about 1 second of samples
