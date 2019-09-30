@@ -52,7 +52,7 @@ if __name__ == '__main__':
     # load existing models if they exist
     if os.path.exists('epochs'):
         files = os.listdir('epochs')
-        if len(files) > 0:
+        if 'generator.tar' in files and 'discriminator.tar' in files:
             g_checkpoint = torch.load('generator.tar')
             generator.load_state_dict(g_checkpoint['model_state_dict'])
             g_optimizer.load_state_dict(g_checkpoint['optimizer_state_dict'])
@@ -149,3 +149,6 @@ if __name__ == '__main__':
             'optimizer_state_dict': d_optimizer.state_dict(),
             'loss': d_loss,
             }, d_path)
+    # save model after epochs complete
+    torch.save(generator.state_dict(), os.path.join('epochs', 'generator-final.pkl'))
+    torch.save(discriminator.state_dict(), os.path.join('epochs', 'discriminator-final.pkl'))
