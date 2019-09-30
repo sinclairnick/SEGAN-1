@@ -33,8 +33,14 @@ if __name__ == '__main__':
     ref_batch = train_dataset.reference_batch(BATCH_SIZE)
 
     # create D and G instances
+    current_epoch = 0
     discriminator = Discriminator()
     generator = Generator()
+
+    # optimizers
+    g_optimizer = optim.RMSprop(generator.parameters(), lr=0.0001)
+    d_optimizer = optim.RMSprop(discriminator.parameters(), lr=0.0001)  
+    
     if torch.cuda.is_available():
         discriminator.cuda()
         generator.cuda()
@@ -42,11 +48,25 @@ if __name__ == '__main__':
     ref_batch = Variable(ref_batch)
     print("# generator parameters:", sum(param.numel() for param in generator.parameters()))
     print("# discriminator parameters:", sum(param.numel() for param in discriminator.parameters()))
-    # optimizers
-    g_optimizer = optim.RMSprop(generator.parameters(), lr=0.0001)
-    d_optimizer = optim.RMSprop(discriminator.parameters(), lr=0.0001)
 
-    for epoch in range(NUM_EPOCHS):
+    # load existing models if they exist
+    if os.path.exists('epochs'):
+        files = os.listdir('epochs')
+        if len(files) > 0:
+            g_checkpoint = torch.load('generator.tar')
+            generator.load_state_dict(g_checkpoint['model_state_dict'])
+            g_optimizer.load_state_dict(g_checkpoint['optimizer_state_dict'])
+            g_loss = g_checkpoint['loss']
+            
+            d_checkpoint = torch.load('discriminator.tar')
+            discriminator.load_state_dict(d_checkpoint['model_state_dict'])
+            d_optimizer.load_state_dict(d_checkpoint['optimizer_state_dict'])
+            d_loss = d_checkpoint['loss']
+            
+            current_epoch = g_checkpoint['epoch']
+
+
+    for epoch in range(current_epoch, NUM_EPOCHS):
         train_bar = tqdm(train_data_loader)
         for train_batch, train_clean, train_noisy in train_bar:
 
@@ -115,7 +135,17 @@ if __name__ == '__main__':
                 wavfile.write(file_name, sample_rate, generated_sample.T)
 
         # save the model parameters for each epoch
-        g_path = os.path.join('epochs', 'generator-{}.pkl'.format(epoch + 1))
-        d_path = os.path.join('epochs', 'discriminator-{}.pkl'.format(epoch + 1))
-        torch.save(generator.state_dict(), g_path)
-        torch.save(discriminator.state_dict(), d_path)
+        g_path = os.path.join('epochs', 'generator.tar')
+        d_path = os.path.join('epochs', 'discriminator.tar')
+        torch.save({
+            'epoch': epoch,
+            'model_state_dict': generator.state_dict(),
+            'optimizer_state_dict': g_optimizer.state_dict(),
+            'loss': g_loss,
+            }, g_path)
+        torch.save({
+            'epoch': epoch,
+            'model_state_dict': discriminator.state_dict(),
+            'optimizer_state_dict': d_optimizer.state_dict(),
+            'loss': d_loss,
+            }, d_path)
