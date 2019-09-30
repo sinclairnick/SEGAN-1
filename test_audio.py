@@ -15,12 +15,14 @@ from utils import emphasis
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Test Single Audio Enhancement')
     parser.add_argument('--file_name', type=str, required=True, help='audio file name')
+    parser.add_argument('--generator', type=str, required=True, help='generator to test file on')
     
     opt = parser.parse_args()
     FILE_NAME = opt.file_name
+    GENERATOR = opt.generator
 
     generator = Generator()
-    generator.load_state_dict(torch.load('epochs/generator-final.pkl', map_location='cpu'))
+    generator.load_state_dict(torch.load(GENERATOR, map_location='cpu'))
     if torch.cuda.is_available():
         generator.cuda()
     generator.eval()
