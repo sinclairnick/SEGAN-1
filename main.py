@@ -64,7 +64,9 @@ if __name__ == '__main__':
             d_loss = d_checkpoint['loss']
             
             current_epoch = g_checkpoint['epoch']
-
+    # initialize training mode in torch
+    generator.train()
+    discriminator.train()
 
     for epoch in range(current_epoch, NUM_EPOCHS):
         train_bar = tqdm(train_data_loader)
