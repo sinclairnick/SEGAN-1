@@ -116,9 +116,9 @@ if __name__ == '__main__':
                     .format(epoch + 1, clean_loss.item(), noisy_loss.item(), g_loss.item(), g_cond_loss.item()))
         if not os.path.exists(opt.loss_path):
             with open(opt.loss_path, 'w') as f:
-                f.write('epoch,g_loss,d_loss\n')
+                f.write('epoch,g_loss_,g_cond_loss,total_g_loss,clean_loss,noisy_loss,total_d_loss\n')
         with open(opt.loss_path, 'a') as file:
-            file.write('{},{},{}\n'.format(epoch+1, g_loss, d_loss))
+            file.write('{},{},{},{},{},{},{}\n'.format(epoch+1, g_loss_, g_cond_loss, g_loss, clean_loss, noisy_loss, d_loss))
 
         # TEST model
         test_bar = tqdm(test_data_loader, desc='Test model and save generated audios')
