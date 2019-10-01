@@ -25,7 +25,6 @@ if __name__ == '__main__':
     generator.load_state_dict(torch.load(GENERATOR, map_location='cpu'))
     if torch.cuda.is_available():
         generator.cuda()
-    generator.eval()
     
     noisy_slices = slice_signal(FILE_NAME, window_size, 1, sample_rate)
     enhanced_speech = []
