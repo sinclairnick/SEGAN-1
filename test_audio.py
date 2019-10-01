@@ -22,7 +22,7 @@ if __name__ == '__main__':
     GENERATOR = opt.generator
 
     generator = Generator()
-    generator.load_state_dict(torch.load(GENERATOR, map_location=torch.device('cpu')))
+    generator.load_state_dict(torch.load(GENERATOR, map_location='cpu'))
     if torch.cuda.is_available():
         generator.cuda()
     generator.eval()
